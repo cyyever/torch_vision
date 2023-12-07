@@ -1,12 +1,13 @@
 import functools
 
+import torch
+from cyy_naive_lib.log import get_logger
 from cyy_torch_toolbox import DatasetType
 from cyy_torch_toolbox.dataset.collection import DatasetCollection
 from cyy_torch_toolbox.factory import Factory
 from cyy_torch_toolbox.model import (create_model,
                                      global_model_evaluator_factory,
                                      global_model_factory)
-from cyy_torch_toolbox.model.repositary import get_model_info
 
 from .evaluator import VisionModelEvaluator
 
@@ -32,8 +33,40 @@ def get_model(
     return {"model": model, "repo": model_constructor_info.get("repo", None)}
 
 
-model_constructors = get_model_info().get(DatasetType.Vision, {})
-for name, model_constructor_info in model_constructors.items():
+def get_model_constructors() -> dict:
+    model_info: dict = {}
+    github_repos: list = [
+        "pytorch/vision:main",
+        "huggingface/pytorch-image-models:main",
+        "cyyever/torch_models:main",
+    ]
+
+    for repo in github_repos:
+        entrypoints = torch.hub.list(
+            repo, force_reload=False, trust_repo=True, skip_validation=True
+        )
+        for model_name in entrypoints:
+            if model_name.lower() not in model_info:
+                model_info[model_name.lower()] = {
+                    "name": model_name,
+                    "constructor": functools.partial(
+                        torch.hub.load,
+                        repo_or_dir=repo,
+                        model=model_name,
+                        force_reload=False,
+                        trust_repo=True,
+                        skip_validation=True,
+                        verbose=False,
+                    ),
+                    "repo": repo,
+                }
+            else:
+                get_logger().debug("ignore model_name %s", model_name)
+
+    return model_info
+
+
+for name, model_constructor_info in get_model_constructors().items():
     if DatasetType.Vision not in global_model_factory:
         global_model_factory[DatasetType.Vision] = Factory()
     global_model_factory[DatasetType.Vision].register(
