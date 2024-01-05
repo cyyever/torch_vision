@@ -66,11 +66,11 @@ def get_model_constructors() -> dict:
     return model_info
 
 
-for name, model_constructor_info in get_model_constructors().items():
-    if DatasetType.Vision not in global_model_factory:
-        global_model_factory[DatasetType.Vision] = Factory()
+if DatasetType.Vision not in global_model_factory:
+    global_model_factory[DatasetType.Vision] = Factory()
+for name, constructor_info in get_model_constructors().items():
     global_model_factory[DatasetType.Vision].register(
-        name, functools.partial(get_model, model_constructor_info)
+        name, functools.partial(get_model, constructor_info)
     )
 
 global_model_evaluator_factory.register(DatasetType.Vision, get_model_evaluator)

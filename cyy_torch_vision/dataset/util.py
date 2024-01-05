@@ -40,6 +40,4 @@ class VisionDatasetUtil(DatasetUtil):
     def save_sample_image(self, index: int, path: str) -> None:
         os.makedirs(os.path.dirname(path), exist_ok=True)
         sample_input = self._get_sample_input(index, apply_transform=False)
-        if "image" in sample_input.__class__.__name__.lower():
-            return sample_input
         torchvision.utils.save_image(sample_input, path)

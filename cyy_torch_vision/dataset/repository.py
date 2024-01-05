@@ -14,7 +14,7 @@ def register_constructors() -> None:
     for repository in repositories:
         dataset_constructors |= get_class_attrs(
             repository,
-            filter_fun=lambda k, v: issubclass(v, torch.utils.data.Dataset),
+            filter_fun=lambda _, v: issubclass(v, torch.utils.data.Dataset),
         )
 
     for name, constructor in dataset_constructors.items():
