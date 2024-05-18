@@ -3,7 +3,7 @@ import os
 
 import torch
 import torch.utils.data
-import torchvision
+import torchvision.utils
 from cyy_torch_toolbox import DatasetUtil
 
 

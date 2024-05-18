@@ -1,6 +1,6 @@
 import torch
 import torch.utils.data
-import torchvision
+import torchvision.datasets
 from cyy_naive_lib.reflection import get_class_attrs
 from cyy_torch_toolbox import DatasetType
 from cyy_torch_toolbox.dataset.repository import register_dataset_constructors
