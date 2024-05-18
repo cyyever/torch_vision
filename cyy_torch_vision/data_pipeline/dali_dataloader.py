@@ -10,7 +10,8 @@ from .dataset import get_dataset_size
 
 if has_torchvision:
     import nvidia.dali
-    import torchvision
+    import torchvision.datasets
+    import torchvision.transforms
     from nvidia.dali.pipeline import pipeline_def
     from nvidia.dali.plugin.pytorch import (DALIClassificationIterator,
                                             LastBatchPolicy)

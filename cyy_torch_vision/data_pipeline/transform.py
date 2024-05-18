@@ -1,6 +1,6 @@
 import torch
 import torch.utils.data
-import torchvision
+import torchvision.transforms
 from cyy_naive_lib.log import get_logger
 from cyy_torch_toolbox.data_pipeline.transform import Transforms
 from cyy_torch_toolbox.dataset.collection import DatasetCollection
