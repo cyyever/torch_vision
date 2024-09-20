@@ -1,8 +1,6 @@
 import functools
 
-from cyy_torch_toolbox import DatasetType
-from cyy_torch_toolbox.dataset.collection import DatasetCollection
-from cyy_torch_toolbox.factory import Factory
+from cyy_torch_toolbox import DatasetCollection, DatasetType, Factory
 from cyy_torch_toolbox.model import (create_model,
                                      global_model_evaluator_factory,
                                      global_model_factory)
