@@ -6,11 +6,9 @@ import torch
 import torchvision.datasets
 import torchvision.transforms
 from cyy_naive_lib.log import get_logger
-from cyy_torch_toolbox import (DatasetCollection, MachineLearningPhase,
-                               ModelType)
+from cyy_torch_toolbox import DatasetCollection, MachineLearningPhase, ModelType
 from nvidia.dali.pipeline import pipeline_def
-from nvidia.dali.plugin.pytorch import (DALIClassificationIterator,
-                                        LastBatchPolicy)
+from nvidia.dali.plugin.pytorch import DALIClassificationIterator, LastBatchPolicy
 
 
 @pipeline_def

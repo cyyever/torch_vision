@@ -1,11 +1,12 @@
 import functools
 
 from cyy_torch_toolbox import DatasetCollection, DatasetType, Factory
-from cyy_torch_toolbox.model import (create_model,
-                                     global_model_evaluator_factory,
-                                     global_model_factory)
-from cyy_torch_toolbox.model.repositary import (get_model_info,
-                                                get_torch_hub_model_info)
+from cyy_torch_toolbox.model import (
+    create_model,
+    global_model_evaluator_factory,
+    global_model_factory,
+)
+from cyy_torch_toolbox.model.repositary import get_model_info, get_torch_hub_model_info
 
 from ..dataset.util import VisionDatasetUtil
 from .evaluator import VisionModelEvaluator
@@ -30,7 +31,7 @@ def get_model(
                 k: dataset_util.channel,
             }
     model = create_model(model_constructor_info["constructor"], **final_model_kwargs)
-    return {"model": model, "repo": model_constructor_info.get("repo", None)}
+    return {"model": model, "repo": model_constructor_info.get("repo")}
 
 
 def get_model_constructors() -> dict:
