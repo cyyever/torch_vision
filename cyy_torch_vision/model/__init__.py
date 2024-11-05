@@ -12,14 +12,10 @@ from ..dataset.util import VisionDatasetUtil
 from .evaluator import VisionModelEvaluator
 
 
-def get_model_evaluator(model, **kwargs) -> VisionModelEvaluator:
-    return VisionModelEvaluator(model=model, **kwargs)
+global_model_evaluator_factory.register(DatasetType.Vision, [VisionModelEvaluator])
 
 
-global_model_evaluator_factory.register(DatasetType.Vision, VisionModelEvaluator)
-
-
-def get_model(
+def __get_model(
     model_constructor_info: dict, dataset_collection: DatasetCollection, **kwargs
 ) -> dict:
     final_model_kwargs: dict = kwargs
@@ -34,7 +30,7 @@ def get_model(
     return {"model": model, "repo": model_constructor_info.get("repo")}
 
 
-def get_model_constructors() -> dict:
+def __get_model_constructors() -> dict:
     model_info: dict = {}
     github_repos: list = [
         "huggingface/pytorch-image-models:main",
@@ -47,12 +43,11 @@ def get_model_constructors() -> dict:
     return model_info
 
 
-factory = Factory()
-for name, constructor_info in get_model_constructors().items():
-    factory.register(name, functools.partial(get_model, constructor_info))
+__factory = Factory()
+for name, constructor_info in __get_model_constructors().items():
+    __factory.register(name, functools.partial(__get_model, constructor_info))
 
 if DatasetType.Vision not in global_model_factory:
     global_model_factory[DatasetType.Vision] = []
 
-global_model_factory[DatasetType.Vision].append(factory)
-global_model_evaluator_factory.register(DatasetType.Vision, [get_model_evaluator])
+global_model_factory[DatasetType.Vision].append(__factory)
