@@ -47,11 +47,12 @@ def get_model_constructors() -> dict:
     return model_info
 
 
-if DatasetType.Vision not in global_model_factory:
-    global_model_factory[DatasetType.Vision] = Factory()
+factory = Factory()
 for name, constructor_info in get_model_constructors().items():
-    global_model_factory[DatasetType.Vision].register(
-        name, functools.partial(get_model, constructor_info)
-    )
+    factory.register(name, functools.partial(get_model, constructor_info))
 
-global_model_evaluator_factory.register(DatasetType.Vision, get_model_evaluator)
+if DatasetType.Vision not in global_model_factory:
+    global_model_factory[DatasetType.Vision] = []
+
+global_model_factory[DatasetType.Vision].append(factory)
+global_model_evaluator_factory.register(DatasetType.Vision, [get_model_evaluator])
