@@ -11,7 +11,6 @@ from cyy_torch_toolbox.model.repositary import get_model_info, get_torch_hub_mod
 from ..dataset.util import VisionDatasetUtil
 from .evaluator import VisionModelEvaluator
 
-
 global_model_evaluator_factory.register(DatasetType.Vision, [VisionModelEvaluator])
 
 

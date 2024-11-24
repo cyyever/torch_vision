@@ -5,7 +5,7 @@ import nvidia.dali
 import torch
 import torchvision.datasets
 import torchvision.transforms
-from cyy_naive_lib.log import get_logger
+from cyy_naive_lib.log import log_debug, log_error, log_info
 from cyy_torch_toolbox import DatasetCollection, MachineLearningPhase, ModelType
 from nvidia.dali.pipeline import pipeline_def
 from nvidia.dali.plugin.pytorch import DALIClassificationIterator, LastBatchPolicy
@@ -40,7 +40,7 @@ def create_dali_pipeline(
         for t in raw_input_transforms
         if not isinstance(t, torchvision.transforms.ToTensor)
     ]
-    get_logger().debug("raw_input_transforms are %s", raw_input_transforms)
+    log_debug("raw_input_transforms are %s", raw_input_transforms)
     horizontal_mirror = False
     mean_and_std = None
     remain_transforms = []
@@ -120,7 +120,7 @@ def create_dali_pipeline(
     )
 
     if remain_transforms:
-        get_logger().error("remaining input transforms are %s", remain_transforms)
+        log_error("remaining input transforms are %s", remain_transforms)
         raise RuntimeError("can't cover all input transforms")
 
     if device is not None:
@@ -140,7 +140,7 @@ def get_dali_dataloader(
         dc.get_dataset_util(phase).get_original_dataset(),
         torchvision.datasets.folder.ImageFolder,
     ):
-        get_logger().info("use DALI")
+        log_info("use DALI")
         pipeline = create_dali_pipeline(
             dc=dc,
             phase=phase,

@@ -1,10 +1,14 @@
 import torch
 import torch.utils.data
 import torchvision.transforms
-from cyy_naive_lib.log import get_logger
+from cyy_naive_lib.log import log_debug
+from cyy_torch_toolbox import (
+    DatasetCollection,
+    DatasetType,
+    MachineLearningPhase,
+    TransformType,
+)
 from cyy_torch_toolbox.data_pipeline.transform import Transforms
-from cyy_torch_toolbox.dataset.collection import DatasetCollection
-from cyy_torch_toolbox.ml_type import DatasetType, MachineLearningPhase, TransformType
 
 from ..dataset.util import VisionDatasetUtil
 
@@ -42,7 +46,7 @@ def add_vision_transforms(dc: DatasetCollection, model_evaluator) -> None:
         model_evaluator.get_underlying_model().__class__, "input_size", None
     )
     if input_size is not None:
-        get_logger().debug("resize input to %s", input_size)
+        log_debug("resize input to %s", input_size)
         dc.append_transform(
             transform=torchvision.transforms.Resize(input_size, antialias=True),
             key=TransformType.Input,
