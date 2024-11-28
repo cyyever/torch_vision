@@ -18,4 +18,6 @@ def register_constructors() -> None:
         )
 
     for name, constructor in dataset_constructors.items():
-        register_dataset_constructors(DatasetType.Vision, name, constructor)
+        register_dataset_constructors(
+            name=name, constructor=constructor, dataset_type=DatasetType.Vision
+        )
