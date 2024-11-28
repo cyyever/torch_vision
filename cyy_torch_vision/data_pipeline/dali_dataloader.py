@@ -129,7 +129,7 @@ def create_dali_pipeline(
 
 
 def get_dali_dataloader(
-    dataset,
+    # dataset,
     dc: DatasetCollection,
     phase: MachineLearningPhase,
     device: torch.device,
@@ -149,7 +149,7 @@ def get_dali_dataloader(
         pipeline.build()
         return DALIClassificationIterator(
             pipeline,
-            size=get_dataset_size(dataset),
+            # size=get_dataset_size(dataset),
             auto_reset=True,
             dynamic_shape=True,
             last_batch_policy=LastBatchPolicy.PARTIAL,
