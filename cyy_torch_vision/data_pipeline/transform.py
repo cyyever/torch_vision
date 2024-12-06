@@ -8,22 +8,25 @@ from cyy_torch_toolbox import (
     MachineLearningPhase,
     TransformType,
 )
-from cyy_torch_toolbox.data_pipeline.transform import Transforms
+from cyy_torch_toolbox.data_pipeline.transform import (
+    DataPipeline,
+    Transform,
+    Transforms,
+)
 
 from ..dataset.util import VisionDatasetUtil
 
 
 def get_mean_and_std(dc):
     dataset = torch.utils.data.ConcatDataset(list(dc.foreach_dataset()))
-    transforms = Transforms()
-    transforms.append(
-        key=TransformType.Input, transform=torchvision.transforms.ToTensor()
-    )
+    pipeline = DataPipeline()
+    pipeline.append(Transform(fun=torchvision.transforms.ToTensor()))
 
     def computation_fun():
         return VisionDatasetUtil(
             dataset=dataset,
-            transforms=transforms,
+            transforms=Transforms(),
+            pipeline=pipeline,
             name=dc.name,
         ).get_mean_and_std()
 
@@ -33,6 +36,11 @@ def get_mean_and_std(dc):
 def add_vision_extraction(dc: DatasetCollection) -> None:
     assert dc.dataset_type == DatasetType.Vision
     dc.append_transform(torchvision.transforms.ToTensor(), key=TransformType.Input)
+    dc.append_named_transform(
+        Transform(
+            name="to_tensor", fun=torchvision.transforms.ToTensor(), cacheable=True
+        ),
+    )
 
 
 def add_vision_transforms(dc: DatasetCollection, model_evaluator) -> None:
@@ -41,6 +49,13 @@ def add_vision_transforms(dc: DatasetCollection, model_evaluator) -> None:
     dc.append_transform(
         torchvision.transforms.Normalize(mean=mean, std=std),
         key=TransformType.Input,
+    )
+    dc.append_named_transform(
+        Transform(
+            name="normalize",
+            fun=torchvision.transforms.Normalize(mean=mean, std=std),
+            cacheable=True,
+        ),
     )
     input_size = getattr(
         model_evaluator.get_underlying_model().__class__, "input_size", None
@@ -51,10 +66,22 @@ def add_vision_transforms(dc: DatasetCollection, model_evaluator) -> None:
             transform=torchvision.transforms.Resize(input_size, antialias=True),
             key=TransformType.Input,
         )
+        dc.append_named_transform(
+            Transform(
+                fun=torchvision.transforms.Resize(input_size, antialias=True),
+                cacheable=True,
+            )
+        )
     if dc.name.upper() not in ("SVHN", "MNIST"):
         dc.append_transform(
             torchvision.transforms.RandomHorizontalFlip(),
             key=TransformType.RandomInput,
+            phases={MachineLearningPhase.Training},
+        )
+        dc.append_named_transform(
+            Transform(
+                fun=torchvision.transforms.RandomHorizontalFlip(),
+            ),
             phases={MachineLearningPhase.Training},
         )
     if dc.name.upper() in ("CIFAR10", "CIFAR100"):
@@ -63,19 +90,9 @@ def add_vision_transforms(dc: DatasetCollection, model_evaluator) -> None:
             key=TransformType.RandomInput,
             phases={MachineLearningPhase.Training},
         )
-    if dc.name.lower() == "imagenet":
-        dc.append_transform(
-            torchvision.transforms.RandomResizedCrop(224),
-            key=TransformType.RandomInput,
+        dc.append_named_transform(
+            Transform(
+                fun=torchvision.transforms.RandomCrop(32, padding=4),
+            ),
             phases={MachineLearningPhase.Training},
-        )
-        dc.append_transform(
-            torchvision.transforms.Resize(256),
-            key=TransformType.Input,
-            phases={MachineLearningPhase.Validation, MachineLearningPhase.Test},
-        )
-        dc.append_transform(
-            torchvision.transforms.CenterCrop(224),
-            key=TransformType.Input,
-            phases={MachineLearningPhase.Validation, MachineLearningPhase.Test},
         )
