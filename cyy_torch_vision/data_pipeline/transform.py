@@ -35,7 +35,6 @@ def get_mean_and_std(dc):
 
 def add_vision_extraction(dc: DatasetCollection) -> None:
     assert dc.dataset_type == DatasetType.Vision
-    dc.append_transform(torchvision.transforms.ToTensor(), key=TransformType.Input)
     dc.append_named_transform(
         Transform(
             name="to_tensor",
@@ -50,10 +49,6 @@ def add_vision_transforms(dc: DatasetCollection, model_evaluator) -> None:
     assert dc.dataset_type == DatasetType.Vision
     add_vision_extraction(dc=dc)
     mean, std = get_mean_and_std(dc)
-    dc.append_transform(
-        torchvision.transforms.Normalize(mean=mean, std=std),
-        key=TransformType.Input,
-    )
     dc.append_named_transform(
         Transform(
             name="normalize",
@@ -67,10 +62,6 @@ def add_vision_transforms(dc: DatasetCollection, model_evaluator) -> None:
     )
     if input_size is not None:
         log_debug("resize input to %s", input_size)
-        dc.append_transform(
-            transform=torchvision.transforms.Resize(input_size, antialias=True),
-            key=TransformType.Input,
-        )
         dc.append_named_transform(
             Transform(
                 fun=torchvision.transforms.Resize(input_size, antialias=True),
@@ -79,11 +70,6 @@ def add_vision_transforms(dc: DatasetCollection, model_evaluator) -> None:
             )
         )
     if dc.name.upper() not in ("SVHN", "MNIST"):
-        dc.append_transform(
-            torchvision.transforms.RandomHorizontalFlip(),
-            key=TransformType.RandomInput,
-            phases={MachineLearningPhase.Training},
-        )
         dc.append_named_transform(
             Transform(
                 fun=torchvision.transforms.RandomHorizontalFlip(),
@@ -92,11 +78,6 @@ def add_vision_transforms(dc: DatasetCollection, model_evaluator) -> None:
             phases={MachineLearningPhase.Training},
         )
     if dc.name.upper() in ("CIFAR10", "CIFAR100"):
-        dc.append_transform(
-            torchvision.transforms.RandomCrop(32, padding=4),
-            key=TransformType.RandomInput,
-            phases={MachineLearningPhase.Training},
-        )
         dc.append_named_transform(
             Transform(
                 component="input",
