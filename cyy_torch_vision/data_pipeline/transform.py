@@ -38,7 +38,10 @@ def add_vision_extraction(dc: DatasetCollection) -> None:
     dc.append_transform(torchvision.transforms.ToTensor(), key=TransformType.Input)
     dc.append_named_transform(
         Transform(
-            name="to_tensor", fun=torchvision.transforms.ToTensor(), cacheable=True
+            name="to_tensor",
+            fun=torchvision.transforms.ToTensor(),
+            cacheable=True,
+            component="input",
         ),
     )
 
@@ -55,6 +58,7 @@ def add_vision_transforms(dc: DatasetCollection, model_evaluator) -> None:
         Transform(
             name="normalize",
             fun=torchvision.transforms.Normalize(mean=mean, std=std),
+            component="input",
             cacheable=True,
         ),
     )
@@ -70,6 +74,7 @@ def add_vision_transforms(dc: DatasetCollection, model_evaluator) -> None:
         dc.append_named_transform(
             Transform(
                 fun=torchvision.transforms.Resize(input_size, antialias=True),
+                component="input",
                 cacheable=True,
             )
         )
@@ -82,6 +87,7 @@ def add_vision_transforms(dc: DatasetCollection, model_evaluator) -> None:
         dc.append_named_transform(
             Transform(
                 fun=torchvision.transforms.RandomHorizontalFlip(),
+                component="input",
             ),
             phases={MachineLearningPhase.Training},
         )
@@ -93,6 +99,7 @@ def add_vision_transforms(dc: DatasetCollection, model_evaluator) -> None:
         )
         dc.append_named_transform(
             Transform(
+                component="input",
                 fun=torchvision.transforms.RandomCrop(32, padding=4),
             ),
             phases={MachineLearningPhase.Training},
