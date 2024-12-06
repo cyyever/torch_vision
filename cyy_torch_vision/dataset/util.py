@@ -8,9 +8,17 @@ from cyy_torch_toolbox import DatasetUtil
 
 
 class VisionDatasetUtil(DatasetUtil):
+    def _get_image_tensor(self, index: int) -> torch.Tensor:
+        sample = self.get_sample(index)
+        sample_input = sample["input"]
+        if not isinstance(sample_input, torch.Tensor):
+            return torchvision.transforms.ToTensor()(sample_input)
+        print(type(sample_input))
+        return sample_input
+
     @functools.cached_property
     def channel(self):
-        x = self._get_sample_input(0)
+        x = self._get_image_tensor(0)
         assert x.shape[0] <= 3
         return x.shape[0]
 
@@ -21,7 +29,7 @@ class VisionDatasetUtil(DatasetUtil):
             return (mean, std)
         mean = torch.zeros(self.channel)
         for index in range(len(self)):
-            x = self._get_sample_input(index)
+            x = self._get_image_tensor(index)
             for i in range(self.channel):
                 mean[i] += x[i, :, :].mean()
         mean.div_(len(self))

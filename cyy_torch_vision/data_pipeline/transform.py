@@ -45,6 +45,7 @@ def add_vision_extraction(dc: DatasetCollection) -> None:
 
 def add_vision_transforms(dc: DatasetCollection, model_evaluator) -> None:
     assert dc.dataset_type == DatasetType.Vision
+    add_vision_extraction(dc=dc)
     mean, std = get_mean_and_std(dc)
     dc.append_transform(
         torchvision.transforms.Normalize(mean=mean, std=std),
