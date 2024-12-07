@@ -7,7 +7,7 @@ from cyy_torch_toolbox import (
     DatasetType,
     MachineLearningPhase,
 )
-from cyy_torch_toolbox.data_pipeline.transform import (
+from cyy_torch_toolbox.data_pipeline import (
     DataPipeline,
     Transform,
 )
