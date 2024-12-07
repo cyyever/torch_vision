@@ -6,12 +6,10 @@ from cyy_torch_toolbox import (
     DatasetCollection,
     DatasetType,
     MachineLearningPhase,
-    TransformType,
 )
 from cyy_torch_toolbox.data_pipeline.transform import (
     DataPipeline,
     Transform,
-    Transforms,
 )
 
 from ..dataset.util import VisionDatasetUtil
@@ -25,7 +23,6 @@ def get_mean_and_std(dc):
     def computation_fun():
         return VisionDatasetUtil(
             dataset=dataset,
-            transforms=Transforms(),
             pipeline=pipeline,
             name=dc.name,
         ).get_mean_and_std()
