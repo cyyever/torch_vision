@@ -18,7 +18,7 @@ def __get_model(
     model_constructor_info: dict, dataset_collection: DatasetCollection, **kwargs
 ) -> dict:
     final_model_kwargs: dict = kwargs
-    dataset_util = dataset_collection.get_dataset_util()
+    dataset_util = dataset_collection.get_any_dataset_util()
     assert isinstance(dataset_util, VisionDatasetUtil)
     for k in ("input_channels", "channels"):
         if k not in kwargs:
