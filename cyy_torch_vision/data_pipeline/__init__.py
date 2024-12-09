@@ -3,5 +3,4 @@ from cyy_torch_toolbox.data_pipeline import global_data_transform_factory
 
 from .transform import add_vision_transforms
 
-
 global_data_transform_factory.register(DatasetType.Vision, add_vision_transforms)
