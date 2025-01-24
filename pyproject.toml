@@ -14,10 +14,9 @@ license = {text = "BSD License"}
 classifiers = [
   "Programming Language :: Python"
 ]
-
-dynamic = ["dependencies"]
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
+dependencies=["torchvision",
+"cyy_torch_toolbox@git+https://git@github.com/cyyever/torch_toolbox.git@main",
+]
 
 
 

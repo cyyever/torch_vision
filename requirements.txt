@@ -1,2 +1,0 @@
-torchvision
-cyy_torch_toolbox@git+https://git@github.com/cyyever/torch_toolbox.git@main
