@@ -37,7 +37,7 @@ class VisionDatasetUtil(DatasetUtil):
         wh = None
         std = torch.zeros(self.channel)
         for index in range(len(self)):
-            x = self._get_sample_input(index)
+            x = self._get_image_tensor(index)
             if wh is None:
                 wh = x.shape[1] * x.shape[2]
             for i in range(self.channel):
