@@ -19,6 +19,8 @@ dependencies=["torchvision",
 ]
 
 
+[tool.setuptools.package-data]
+cyy_torch_vision = ["py.typed"]
 
 [project.urls]
 Repository = "https://github.com/cyyever/torch_vision"
