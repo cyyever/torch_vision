@@ -1,4 +1,9 @@
-from cyy_torch_toolbox import MachineLearningPhase, create_dataset_collection
+from cyy_torch_toolbox import (
+    ClassificationDatasetCollection,
+    MachineLearningPhase,
+    create_dataset_collection,
+)
+from cyy_torch_vision import VisionDatasetUtil
 
 
 def test_dataset() -> None:
@@ -11,11 +16,16 @@ def test_dataset() -> None:
         )
         < 0.01
     )
-    assert mnist.get_dataset_util().channel == 1
+    dataset_util = mnist.get_dataset_util()
+    assert isinstance(dataset_util, VisionDatasetUtil)
+    assert dataset_util.channel == 1
 
     cifar10 = create_dataset_collection("CIFAR10")
-    assert cifar10.get_dataset_util().channel == 3
-    assert len(cifar10.get_dataset_util().get_labels()) == 10
+    assert isinstance(cifar10, ClassificationDatasetCollection)
+    dataset_util = cifar10.get_dataset_util()
+    assert isinstance(dataset_util, VisionDatasetUtil)
+    assert dataset_util.channel == 3
+    assert len(dataset_util.get_labels()) == 10
     assert abs(
         len(cifar10.get_dataset_util(MachineLearningPhase.Test))
         - len(cifar10.get_dataset_util(MachineLearningPhase.Validation))
@@ -27,4 +37,5 @@ def test_dataset() -> None:
 def test_dataset_labels() -> None:
     for name in ("MNIST", "CIFAR10"):
         dc = create_dataset_collection(name)
+        assert isinstance(dc, ClassificationDatasetCollection)
         assert len(dc.get_labels()) == 10
