@@ -5,7 +5,7 @@ from cyy_torch_toolbox.model import (
     create_model,
     global_model_factory,
 )
-from cyy_torch_toolbox.model.repositary import get_model_info, get_torch_hub_model_info
+from cyy_torch_toolbox.model.repository import get_model_info, get_torch_hub_model_info
 
 from ..dataset.util import VisionDatasetUtil
 
