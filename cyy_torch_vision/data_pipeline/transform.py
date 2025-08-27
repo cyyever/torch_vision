@@ -2,14 +2,14 @@ import torch
 import torch.utils.data
 import torchvision.transforms
 from cyy_naive_lib.log import log_debug
+from cyy_preprocessing_pipeline import (
+    DataPipeline,
+    Transform,
+)
 from cyy_torch_toolbox import (
     DatasetCollection,
     DatasetType,
     MachineLearningPhase,
-)
-from cyy_preprocessing_pipeline import (
-    DataPipeline,
-    Transform,
 )
 
 from ..dataset.util import VisionDatasetUtil
