@@ -1,3 +1,5 @@
+import types
+
 import torch
 import torch.utils.data
 import torchvision.datasets
@@ -7,7 +9,7 @@ from cyy_torch_toolbox.dataset.repository import register_dataset_constructors
 
 
 def register_constructors() -> None:
-    repositories = [
+    repositories: list[types.ModuleType] = [
         torchvision.datasets,
     ]
     dataset_constructors: dict[str, type[torch.utils.data.Dataset]] = {}
