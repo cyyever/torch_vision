@@ -11,6 +11,7 @@ from cyy_torch_toolbox import (
     DatasetType,
     MachineLearningPhase,
 )
+from cyy_torch_toolbox.model.evaluator import ModelEvaluator
 
 from ..dataset.util import VisionDatasetUtil
 
@@ -20,7 +21,7 @@ def get_mean_and_std(dc: DatasetCollection) -> tuple[torch.Tensor, torch.Tensor]
     pipeline = DataPipeline()
     pipeline.append(Transform(fun=torchvision.transforms.ToTensor()))
 
-    def computation_fun():
+    def computation_fun() -> tuple[torch.Tensor, torch.Tensor]:
         return VisionDatasetUtil(
             dataset=dataset,
             pipeline=pipeline,
@@ -42,7 +43,7 @@ def add_vision_extraction(dc: DatasetCollection) -> None:
     )
 
 
-def add_vision_transforms(dc: DatasetCollection, model_evaluator) -> None:
+def add_vision_transforms(dc: DatasetCollection, model_evaluator: ModelEvaluator) -> None:
     assert dc.dataset_type == DatasetType.Vision
     add_vision_extraction(dc=dc)
     mean, std = get_mean_and_std(dc)

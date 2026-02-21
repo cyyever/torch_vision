@@ -1,8 +1,10 @@
+from typing import Any
+
 import cyy_torch_vision  # noqa: F401
 from cyy_torch_toolbox import Config, ExecutorHookPoint, StopExecutingException
 
 
-def stop_training(*args, **kwargs):
+def stop_training(*args: Any, **kwargs: Any) -> None:
     raise StopExecutingException()
 
 

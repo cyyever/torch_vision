@@ -1,8 +1,7 @@
 import functools
-import os
+from pathlib import Path
 
 import torch
-import torch.utils.data
 import torchvision.utils
 from cyy_torch_toolbox import DatasetUtil
 
@@ -33,19 +32,19 @@ class VisionDatasetUtil(DatasetUtil):
                 mean[i] += x[i, :, :].mean()
         mean.div_(len(self))
 
-        wh = None
+        wh: int | None = None
         std = torch.zeros(self.channel)
         for index in range(len(self)):
             x = self._get_image_tensor(index)
             if wh is None:
                 wh = x.shape[1] * x.shape[2]
             for i in range(self.channel):
-                std[i] += torch.sum((x[i, :, :] - mean[i].data.item()) ** 2) / wh
+                std[i] += torch.sum((x[i, :, :] - mean[i].item()) ** 2) / wh
         std = std.div(len(self)).sqrt()
         return mean, std
 
-    def save_sample_image(self, index: int, path: str) -> None:
-        os.makedirs(os.path.dirname(path), exist_ok=True)
+    def save_sample_image(self, index: int, path: Path) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
         sample_input = self._get_sample_input(index)
         if hasattr(sample_input, "save"):
             sample_input.save(path)
