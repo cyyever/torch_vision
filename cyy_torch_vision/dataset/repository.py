@@ -10,7 +10,7 @@ def register_constructors() -> None:
     repositories = [
         torchvision.datasets,
     ]
-    dataset_constructors: dict = {}
+    dataset_constructors: dict[str, type[torch.utils.data.Dataset]] = {}
     for repository in repositories:
         dataset_constructors |= get_class_attrs(
             repository,

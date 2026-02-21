@@ -1,4 +1,5 @@
 import functools
+from typing import Any
 
 from cyy_torch_toolbox import DatasetCollection, DatasetType, Factory
 from cyy_torch_toolbox.model import (
@@ -11,9 +12,11 @@ from ..dataset.util import VisionDatasetUtil
 
 
 def __get_model(
-    model_constructor_info: dict, dataset_collection: DatasetCollection, **kwargs
-) -> dict:
-    final_model_kwargs: dict = kwargs
+    model_constructor_info: dict[str, Any],
+    dataset_collection: DatasetCollection,
+    **kwargs: Any,
+) -> dict[str, Any]:
+    final_model_kwargs: dict[str, Any] = kwargs
     dataset_util = dataset_collection.get_any_dataset_util()
     assert isinstance(dataset_util, VisionDatasetUtil)
     for k in ("input_channels", "channels"):
@@ -25,9 +28,9 @@ def __get_model(
     return {"model": model, "repo": model_constructor_info.get("repo")}
 
 
-def __get_model_constructors() -> dict:
-    model_info: dict = {}
-    github_repos: list = [
+def __get_model_constructors() -> dict[str, Any]:
+    model_info: dict[str, Any] = {}
+    github_repos: list[str] = [
         "huggingface/pytorch-image-models:main",
         "pytorch/vision:main",
     ]

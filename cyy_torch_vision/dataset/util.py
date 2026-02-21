@@ -13,16 +13,15 @@ class VisionDatasetUtil(DatasetUtil):
         sample_input = sample["input"]
         if not isinstance(sample_input, torch.Tensor):
             return torchvision.transforms.ToTensor()(sample_input)
-        print(type(sample_input))
         return sample_input
 
     @functools.cached_property
-    def channel(self):
+    def channel(self) -> int:
         x = self._get_image_tensor(0)
         assert x.shape[0] <= 3
         return x.shape[0]
 
-    def get_mean_and_std(self):
+    def get_mean_and_std(self) -> tuple[torch.Tensor, torch.Tensor]:
         if self._name.lower() == "imagenet":
             mean = torch.tensor([0.485, 0.456, 0.406])
             std = torch.tensor([0.229, 0.224, 0.225])

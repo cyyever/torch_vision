@@ -15,7 +15,7 @@ from cyy_torch_toolbox import (
 from ..dataset.util import VisionDatasetUtil
 
 
-def get_mean_and_std(dc):
+def get_mean_and_std(dc: DatasetCollection) -> tuple[torch.Tensor, torch.Tensor]:
     dataset = torch.utils.data.ConcatDataset(list(dc.foreach_dataset()))
     pipeline = DataPipeline()
     pipeline.append(Transform(fun=torchvision.transforms.ToTensor()))
