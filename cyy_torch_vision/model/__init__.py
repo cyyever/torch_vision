@@ -6,12 +6,11 @@ from cyy_torch_toolbox.model import (
     create_model,
     global_model_factory,
 )
-from cyy_torch_toolbox.model.repository import get_model_info, get_torch_hub_model_info
 
 from ..dataset.util import VisionDatasetUtil
 
 
-def __get_model(
+def _get_model(
     model_constructor_info: dict[str, Any],
     dataset_collection: DatasetCollection,
     **kwargs: Any,
@@ -28,23 +27,34 @@ def __get_model(
     return {"model": model, "repo": model_constructor_info.get("repo")}
 
 
-def __get_model_constructors() -> dict[str, Any]:
-    model_info: dict[str, Any] = {}
-    github_repos: list[str] = [
-        "pytorch/vision:main",
-    ]
+class _LazyModelFactory(Factory):
+    """Lazily loads torch hub models on first access."""
 
-    for repo in github_repos:
-        model_info |= get_torch_hub_model_info(repo)
-    model_info |= get_model_info()[DatasetType.Vision]
-    return model_info
+    def __init__(self) -> None:
+        super().__init__()
+        self.__loaded = False
 
+    def __load(self) -> None:
+        if self.__loaded:
+            return
+        self.__loaded = True
+        from cyy_torch_toolbox.model.repository import get_model_info
 
-__factory = Factory()
-for name, constructor_info in __get_model_constructors().items():
-    __factory.register(name, functools.partial(__get_model, constructor_info))
+        for name, constructor_info in get_model_info()[DatasetType.Vision].items():
+            self.register(name, functools.partial(_get_model, constructor_info))
+
+    def get(
+        self, key: Any, case_sensitive: bool = True, default: Any = None, **kwargs: Any
+    ) -> Any:
+        self.__load()
+        return super().get(key, case_sensitive=case_sensitive, default=default, **kwargs)
+
+    def get_similar_keys(self, key: str) -> list[str]:
+        self.__load()
+        return super().get_similar_keys(key)
+
 
 if DatasetType.Vision not in global_model_factory:
     global_model_factory[DatasetType.Vision] = []
 
-global_model_factory[DatasetType.Vision].append(__factory)
+global_model_factory[DatasetType.Vision].append(_LazyModelFactory())
