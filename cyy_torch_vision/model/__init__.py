@@ -31,7 +31,6 @@ def __get_model(
 def __get_model_constructors() -> dict[str, Any]:
     model_info: dict[str, Any] = {}
     github_repos: list[str] = [
-        "huggingface/pytorch-image-models:main",
         "pytorch/vision:main",
     ]
 
